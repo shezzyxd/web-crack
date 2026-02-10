@@ -1,0 +1,240 @@
+:root {
+  --bg: #0a0a14;
+  --card: #161b2e;
+  --text: #e0e0ff;
+  --muted: #a0a0cc;
+  --accent: #00f0ff;
+  --accent2: #ff2eff;
+  
+  /* Unikalne kolory kategorii */
+  --color-menu: #f899ff;      /* roz */
+  --color-horrory: #ff1744;      /* czerwony */
+  --color-strzelanki: #4caf50;   /* zielony */
+  --color-przygodowe: #2196f3;   /* niebieski */
+  --color-survival: #795548;     /* brązowy */
+  --color-wyscigowe: #ff5722;    /* pomarańczowy */
+  --color-singleplayer: #ffeb3b; /* żółty */
+  --color-inne: #9c27b0;         /* fioletowy */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(-45deg, #0d001a, #001133, #1a0033, #001a2e, #0d1a4d);
+  background-size: 300% 300%;
+  animation: gradient 25s ease infinite;
+  opacity: 0.8;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 2.8rem;
+  background: linear-gradient(90deg, #00f0ff, #ff2eff, #ff6e00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: text-shadow 0.3s ease;
+  user-select: none;           /* zapobiega zaznaczaniu tekstu */
+}
+
+h1:hover {
+  text-shadow: 0 0 15px #00f0ff;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 30px 0;
+}
+
+.tab-link {
+  padding: 12px 24px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(0,240,255,0.25);
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  user-select: none;
+}
+
+.tab-link:hover,
+.tab-link.active {
+  background: rgba(255,255,255,0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,240,255,0.3);
+}
+
+/* Unikalne kolory dla zakładek */
+.tab-menu { color: var(--color-menu); border-color: rgba(248, 153, 255, 0.3); }
+.tab-menu:hover, .tab-menu.active { border-color: var(--color-menu); box-shadow: 0 8px 20px rgba(248, 153, 255, 0.3); }
+
+
+.tab-horrory { color: var(--color-horrory); border-color: rgba(255, 23, 68, 0.3); }
+.tab-horrory:hover, .tab-horrory.active { border-color: var(--color-horrory); box-shadow: 0 8px 20px rgba(255, 23, 68, 0.3); }
+
+.tab-strzelanki { color: var(--color-strzelanki); border-color: rgba(76, 175, 80, 0.3); }
+.tab-strzelanki:hover, .tab-strzelanki.active { border-color: var(--color-strzelanki); box-shadow: 0 8px 20px rgba(76, 175, 80, 0.3); }
+
+.tab-przygodowe { color: var(--color-przygodowe); border-color: rgba(33, 150, 243, 0.3); }
+.tab-przygodowe:hover, .tab-przygodowe.active { border-color: var(--color-przygodowe); box-shadow: 0 8px 20px rgba(33, 150, 243, 0.3); }
+
+.tab-survival { color: var(--color-survival); border-color: rgba(121, 85, 72, 0.3); }
+.tab-survival:hover, .tab-survival.active { border-color: var(--color-survival); box-shadow: 0 8px 20px rgba(121, 85, 72, 0.3); }
+
+.tab-wyscigowe { color: var(--color-wyscigowe); border-color: rgba(255, 87, 34, 0.3); }
+.tab-wyscigowe:hover, .tab-wyscigowe.active { border-color: var(--color-wyscigowe); box-shadow: 0 8px 20px rgba(255, 87, 34, 0.3); }
+
+.tab-singleplayer { color: var(--color-singleplayer); border-color: rgba(255, 235, 59, 0.3); }
+.tab-singleplayer:hover, .tab-singleplayer.active { border-color: var(--color-singleplayer); box-shadow: 0 8px 20px rgba(255, 235, 59, 0.3); }
+
+.tab-inne { color: var(--color-inne); border-color: rgba(156, 39, 176, 0.3); }
+.tab-inne:hover, .tab-inne.active { border-color: var(--color-inne); box-shadow: 0 8px 20px rgba(156, 39, 176, 0.3); }
+
+.container {
+  position: relative;
+  min-height: 600px;
+  margin: 0 auto;
+  max-width: 1200px;
+}
+
+.tab-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  pointer-events: none;
+}
+
+.tab-content.active {
+  position: relative;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+h2 {
+  font-size: 2.2rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 12px rgba(0,240,255,0.4);
+}
+
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  align-items: stretch;
+}
+
+.game-card {
+  display: block;
+  background: rgba(22, 27, 46, 0.85);
+  border-radius: 14px;
+  padding: 20px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+  transition: all 0.35s ease;
+  backdrop-filter: blur(6px);
+  text-decoration: none !important;
+  color: inherit;
+  height: 100%;
+  cursor: pointer;
+  position: relative;
+}
+
+.game-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  background: rgba(22, 27, 46, 0.95);
+}
+
+.game-card h3 {
+  color: white;
+  margin-bottom: 8px;
+  font-size: 1.25rem;
+}
+
+.game-card p {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.game-card:visited,
+.game-card:active {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Unikalne kolory dla kategorii (treści) */
+#menu h2 { color: var(--color-menu); text-shadow: 0 0 12px var(--color-menu); }
+#menu .game-card { border-color: rgba(248, 153, 255, 0.3); }
+#menu .game-card:hover { border-color: var(--color-menu); box-shadow: 0 15px 35px rgba(248, 153, 255, 0.35); }
+
+#horrory h2 { color: var(--color-horrory); text-shadow: 0 0 12px var(--color-horrory); }
+#horrory .game-card { border-color: rgba(255, 23, 68, 0.3); }
+#horrory .game-card:hover { border-color: var(--color-horrory); box-shadow: 0 15px 35px rgba(255, 23, 68, 0.35); }
+
+#strzelanki h2 { color: var(--color-strzelanki); text-shadow: 0 0 12px var(--color-strzelanki); }
+#strzelanki .game-card { border-color: rgba(76, 175, 80, 0.3); }
+#strzelanki .game-card:hover { border-color: var(--color-strzelanki); box-shadow: 0 15px 35px rgba(76, 175, 80, 0.35); }
+
+#przygodowe h2 { color: var(--color-przygodowe); text-shadow: 0 0 12px var(--color-przygodowe); }
+#przygodowe .game-card { border-color: rgba(33, 150, 243, 0.3); }
+#przygodowe .game-card:hover { border-color: var(--color-przygodowe); box-shadow: 0 15px 35px rgba(33, 150, 243, 0.35); }
+
+#survival h2 { color: var(--color-survival); text-shadow: 0 0 12px var(--color-survival); }
+#survival .game-card { border-color: rgba(121, 85, 72, 0.3); }
+#survival .game-card:hover { border-color: var(--color-survival); box-shadow: 0 15px 35px rgba(121, 85, 72, 0.35); }
+
+#wyscigowe h2 { color: var(--color-wyscigowe); text-shadow: 0 0 12px var(--color-wyscigowe); }
+#wyscigowe .game-card { border-color: rgba(255, 87, 34, 0.3); }
+#wyscigowe .game-card:hover { border-color: var(--color-wyscigowe); box-shadow: 0 15px 35px rgba(255, 87, 34, 0.35); }
+
+#singleplayer h2 { color: var(--color-singleplayer); text-shadow: 0 0 12px var(--color-singleplayer); }
+#singleplayer .game-card { border-color: rgba(255, 235, 59, 0.3); }
+#singleplayer .game-card:hover { border-color: var(--color-singleplayer); box-shadow: 0 15px 35px rgba(255, 235, 59, 0.35); }
+
+#inne h2 { color: var(--color-inne); text-shadow: 0 0 12px var(--color-inne); }
+#inne .game-card { border-color: rgba(156, 39, 176, 0.3); }
+#inne .game-card:hover { border-color: var(--color-inne); box-shadow: 0 15px 35px rgba(156, 39, 176, 0.35); }
+
+@media (max-width: 700px) {
+  h1 { font-size: 2.3rem; }
+  h2 { font-size: 1.9rem; }
+  .tab-link { padding: 10px 18px; font-size: 0.95rem; }
+  .container { min-height: 800px; }
+  .game-grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+  .game-card { min-height: 140px; }
+}
