@@ -3,31 +3,54 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>『C』『R』『A』『C』『K』</title>
+  <title>&#9829; web crack &#9829;</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<div id="loader">
+  <div class="loader-content">
+    <h1 class="loader-logo">&#9829; web crack &#9829;</h1>
+    
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+
+    <p class="percentage">0%</p>
+  </div>
+</div>
 
 <header>
-  <h1 onclick="window.open('https://www.youtube.com/watch?v=aplY16syZ9A', '_blank')">『C』『R』『A』『C』『K』</h1>
+  <h1 onclick="window.open('https://www.youtube.com/watch?v=aplY16syZ9A', '_blank')">&#9829; web crack &#9829;</h1>
   <p>Wybierz kategorię</p>
 </header>
 
+<div class="search-container">
+  <div class="search-box">
+    <input type="text" id="gameSearch" placeholder="Szukaj gry lub kategorii...">
+    <div class="search-icon">🔍</div>
+  </div>
+  <div class="search-results" id="searchResults"></div>
+</div>
+
 <div class="tabs">
-  <div class="tab-link tab-menu active" data-tab="menu">Menu</div>
-  <div class="tab-link tab-horrory" data-tab="horrory">Horrory</div>
-  <div class="tab-link tab-strzelanki" data-tab="strzelanki">Strzelanki</div>
-  <div class="tab-link tab-przygodowe" data-tab="przygodowe">Przygodowe</div>
-  <div class="tab-link tab-survival" data-tab="survival">Survival</div>
-  <div class="tab-link tab-wyscigowe" data-tab="wyscigowe">Wyścigowe</div>
-  <div class="tab-link tab-singleplayer" data-tab="singleplayer">Singleplayer</div>
-  <div class="tab-link tab-inne" data-tab="inne">Inne</div>
+  <!-- reszta tabsów -->
+</div>
+
+<div class="tabs">
+  <div class="tab-link tab-menu active" data-tab="menu">🥵 Menu</div>
+  <div class="tab-link tab-horrory" data-tab="horrory">👻 Horrors</div>
+  <div class="tab-link tab-strzelanki" data-tab="strzelanki">🔫 Shooters</div>
+  <div class="tab-link tab-przygodowe" data-tab="przygodowe">🌍 Adventure</div>
+  <div class="tab-link tab-survival" data-tab="survival">🏕️ Survival</div>
+  <div class="tab-link tab-wyscigowe" data-tab="wyscigowe">🏎️ Cars</div>
+  <div class="tab-link tab-singleplayer" data-tab="singleplayer">👥 Singleplayer</div>
+  <div class="tab-link tab-inne" data-tab="inne">🔨 Others</div>
 </div>
 
 <div class="container">
 
   <div id="menu" class="tab-content active">
-    <h2>Menu</h2>
+    <h2>🥵 Menu</h2>
     <div class="game-grid">
       <a href="https://www.youtube.com/watch?v=0aHreGrIWos&list=RD0aHreGrIWos&start_radio=1" target="_blank" class="game-card">
         <h3>Cracki v2</h3>
@@ -35,9 +58,25 @@
       </a>
     </div>
   </div>
-  
+  <!-- Przycisk do uruchomienia minigierki -->
+<div class="game-card" onclick="openGame()" style="cursor: pointer; background: linear-gradient(135deg, #f899ff, #ff2eff); color: black; font-weight: bold;">
+  <h3>Crack Bird 🐦‍🔥</h3>
+  <p>Kliknij i bij rekord! Najlepszy wynik: <span id="bestScore">0</span></p>
+</div>
+
+<!-- Overlay z grą (ukryty domyślnie) -->
+<div id="gameOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
+  <canvas id="gameCanvas" width="400" height="600" style="background: #000; border: 4px solid #f899ff; border-radius: 12px;"></canvas>
+  <div style="margin-top: 20px; color: #f899ff; font-size: 24px;">
+    Wynik: <span id="score">0</span> | Najlepszy: <span id="highScore">0</span>
+  </div>
+  <button onclick="closeGame()" style="margin-top: 20px; padding: 12px 30px; background: #f899ff; color: black; border: none; border-radius: 50px; font-size: 18px; cursor: pointer;">
+    Zamknij
+  </button>
+</div>
+
   <div id="horrory" class="tab-content">
-    <h2>Horrory</h2>
+    <h2>👻 Horrors</h2>
     <div class="game-grid">
       <a href="https://store.steampowered.com/app/381210/Dead_by_Daylight/" target="_blank" class="game-card">
         <h3>gra</h3>
@@ -113,13 +152,13 @@
       </a>
       <a href="https://store.steampowered.com/app/238320/Outlast/" target="_blank" class="game-card">
         <h3>Outlast</h3>
-        <p>Survival horror bez broni, gdzie uciekasz i chowasz się przed szaleńcami w opuszczonym azylu. Wersja multiplayerowa pozwala na wspólną eksplorację, pełną jumpscare'ów i psychologicznego terroru.</p>
+        <p>🏕️ Survival horror bez broni, gdzie uciekasz i chowasz się przed szaleńcami w opuszczonym azylu. Wersja multiplayerowa pozwala na wspólną eksplorację, pełną jumpscare'ów i psychologicznego terroru.</p>
       </a>
     </div>
   </div>
 
   <div id="strzelanki" class="tab-content">
-    <h2>Strzelanki</h2>
+    <h2>🔫 Shooters</h2>
     <div class="game-grid">
       <a href="https://store.steampowered.com/app/730/CounterStrike_2/" target="_blank" class="game-card">
         <h3>Counter-Strike 2</h3>
@@ -149,7 +188,7 @@
   </div>
 
   <div id="przygodowe" class="tab-content">
-    <h2>Przygodowe</h2>
+    <h2>🌍 Adventure</h2>
     <div class="game-grid">
       <a href="https://store.steampowered.com/app/1245620/ELDEN_RING/" target="_blank" class="game-card">
         <h3>Elden Ring</h3>
@@ -179,7 +218,7 @@
   </div>
 
   <div id="survival" class="tab-content">
-    <h2>Survival</h2>
+    <h2>🏕️ Survival</h2>
     <div class="game-grid">
       <a href="https://store.steampowered.com/app/1326470/Sons_Of_The_Forest/" target="_blank" class="game-card">
         <h3>Sons of the Forest</h3>
@@ -203,13 +242,13 @@
       </a>
       <a href="https://store.steampowered.com/app/376210/The_Isle/" target="_blank" class="game-card">
         <h3>The Isle</h3>
-        <p>Survival z dinozaurami, gdzie wcielasz się w dino, polujesz i rośniesz. Multiplayer z paczkami przyjaciół jako stado dino dodaje strategii i zabawy.</p>
+        <p>🏕️ Survival z dinozaurami, gdzie wcielasz się w dino, polujesz i rośniesz. Multiplayer z paczkami przyjaciół jako stado dino dodaje strategii i zabawy.</p>
       </a>
     </div>
   </div>
 
   <div id="wyscigowe" class="tab-content">
-    <h2>Wyścigowe</h2>
+    <h2>🏎️ Cars</h2>
     <div class="game-grid">
       <a href="https://store.steampowered.com/app/1551360/Forza_Horizon_5/" target="_blank" class="game-card">
         <h3>Forza Horizon 5</h3>
@@ -235,7 +274,7 @@
   </div>
 
   <div id="singleplayer" class="tab-content">
-    <h2>Singleplayer</h2>
+    <h2>👥 Singleplayer</h2>
     <div class="game-grid">
       <a href="https://store.steampowered.com/app/489830/The_Elder_Scrolls_V_Skyrim_Special_Edition/" target="_blank" class="game-card">
         <h3>Skyrim</h3>
@@ -265,7 +304,7 @@
   </div>
 
   <div id="inne" class="tab-content">
-    <h2>Inne / Party</h2>
+    <h2>🔨 Others</h2>
     <div class="game-grid">
       <a href="https://store.steampowered.com/app/1097150/Among_Us/" target="_blank" class="game-card">
         <h3>Among Us</h3>
