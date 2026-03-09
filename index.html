@@ -4,18 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>&#9829; web crack &#9829;</title>
+  <link rel="icon" type="image/png" href="icon.png">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="loader">
+  <canvas id="bg-particles" style="position:absolute;inset:0;pointer-events:none;z-index:1;"></canvas>
+
   <div class="loader-content">
-    <h1 class="loader-logo">&#9829; web crack &#9829;</h1>
+    <h1 class="loader-logo pulse">&#9829; web crack &#9829;</h1>
     
     <div class="progress-bar">
       <div class="progress"></div>
     </div>
 
     <p class="percentage">0%</p>
+
+    <!-- ← dodaj ten jeden wiersz -->
+    <p class="loader-hint">Pobieranie rynty z Zusu...</p>
   </div>
 </div>
 
@@ -33,10 +39,6 @@
 </div>
 
 <div class="tabs">
-  <!-- reszta tabsów -->
-</div>
-
-<div class="tabs">
   <div class="tab-link tab-menu active" data-tab="menu">🥵 Menu</div>
   <div class="tab-link tab-horrory" data-tab="horrory">👻 Horrors</div>
   <div class="tab-link tab-strzelanki" data-tab="strzelanki">🔫 Shooters</div>
@@ -49,204 +51,791 @@
 
 <div class="container">
 
-  <div id="menu" class="tab-content active">
-    <h2>🥵 Menu</h2>
-    <div class="game-grid">
-      <a href="https://www.youtube.com/watch?v=0aHreGrIWos&list=RD0aHreGrIWos&start_radio=1" target="_blank" class="game-card">
-        <h3>Cracki v2</h3>
-        <p>UwU</p>
-      </a>
+<div id="menu" class="tab-content active">
+  <h2>🥵 Menu</h2>
+  <div class="game-grid">
+    <!-- Flappy Bird Card -->
+    <div class="game-card" style="max-width: 380px; margin: 0 auto; text-align: center;">
+      <h3>Crack Bird 🔥🐦</h3>
+      <p>Najlepszy wynik: <span id="highScore">0</span></p>
+
+      <button onclick="startFlappyBird()"
+              style="background: #f899ff; color: #000; font-weight: bold; padding: 14px 32px; border: none; border-radius: 50px; cursor: pointer; font-size: 17px; margin: 16px 0;">
+        Graj 🐦
+      </button>
+
+      <canvas id="flappyCanvas" width="360" height="540"
+              style="display: none; border: 4px solid #f899ff; border-radius: 16px; margin: 12px auto; box-shadow: 0 0 30px #f899ff60; max-width: 100%;"></canvas>
+
+      <div id="gameMessage" style="color: #f899ff; font-weight: bold; text-align: center; min-height: 80px; padding: 8px; font-size: 17px; line-height: 1.4;"></div>
+    </div>
+
+    <!-- Aim Trainer: Złap Ryntę Card -->
+    <div class="game-card aim-trainer-card" style="max-width: 380px; margin: 0 auto; text-align: center; position: relative; overflow: hidden;">
+      <h3>🎯 Złap Ryntę 💸</h3>
+      <p>Najlepszy wynik: <span id="aimHighScore">0</span> | Accuracy: <span id="aimAccuracy">0%</span></p>
+
+      <button id="startAimBtn" onclick="startAimTrainer()"
+              style="background: linear-gradient(135deg, #f899ff, #ff6ec7); color: #000; font-weight: bold; padding: 14px 32px; border: none; border-radius: 50px; cursor: pointer; font-size: 17px; margin: 16px 0; box-shadow: 0 4px 15px rgba(248, 153, 255, 0.5); transition: all 0.3s ease;">
+        Graj 🎯
+      </button>
+
+      <div id="aimGameArea" style="display: none; position: relative; width: 100%; height: 400px; background: linear-gradient(135deg, rgba(10,10,20,0.9), rgba(26,27,46,0.9)); border-radius: 16px; margin: 12px auto; overflow: hidden; border: 2px solid rgba(248, 153, 255, 0.3); backdrop-filter: blur(10px);">
+        <canvas id="aimCanvas" width="360" height="400" style="display: block; cursor: crosshair; border-radius: 14px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5);"></canvas>
+        <div id="aimUI" style="position: absolute; top: 10px; left: 10px; right: 10px; display: flex; justify-content: space-between; color: #f899ff; font-weight: bold; font-size: 18px; text-shadow: 0 0 10px #f899ff;">
+          <span id="aimTimer">30s</span>
+          <span id="aimScore">0</span>
+          <span id="aimCombo">Combo: 0x</span>
+        </div>
+        <div id="aimParticles" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;"></div>
+      </div>
+
+      <div id="aimEndScreen" style="display: none; color: #f899ff; font-weight: bold; text-align: center; min-height: 100px; padding: 8px; font-size: 17px; line-height: 1.4;">
+        <div id="aimResults"></div>
+        <button onclick="startAimTrainer()" style="background: linear-gradient(135deg, #f899ff, #ff6ec7); color: #000; font-weight: bold; padding: 14px 36px; border: none; border-radius: 999px; font-size: 17px; cursor: pointer; box-shadow: 0 4px 15px rgba(248, 153, 255, 0.5); transition: all 0.2s; margin-top: 12px;">
+          Zagraj ponownie 🎯
+        </button>
+      </div>
     </div>
   </div>
-  <!-- Przycisk do uruchomienia minigierki -->
-<div class="game-card" onclick="openGame()" style="cursor: pointer; background: linear-gradient(135deg, #f899ff, #ff2eff); color: black; font-weight: bold;">
-  <h3>Crack Bird 🐦‍🔥</h3>
-  <p>Kliknij i bij rekord! Najlepszy wynik: <span id="bestScore">0</span></p>
-</div>
-
-<!-- Overlay z grą (ukryty domyślnie) -->
-<div id="gameOverlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9999; justify-content: center; align-items: center; flex-direction: column;">
-  <canvas id="gameCanvas" width="400" height="600" style="background: #000; border: 4px solid #f899ff; border-radius: 12px;"></canvas>
-  <div style="margin-top: 20px; color: #f899ff; font-size: 24px;">
-    Wynik: <span id="score">0</span> | Najlepszy: <span id="highScore">0</span>
-  </div>
-  <button onclick="closeGame()" style="margin-top: 20px; padding: 12px 30px; background: #f899ff; color: black; border: none; border-radius: 50px; font-size: 18px; cursor: pointer;">
-    Zamknij
-  </button>
 </div>
 
   <div id="horrory" class="tab-content">
     <h2>👻 Horrors</h2>
     <div class="game-grid">
-      <a href="https://store.steampowered.com/app/381210/Dead_by_Daylight/" target="_blank" class="game-card">
-        <h3>gra</h3>
-        <p>opis.</p>
+      <a href="https://game3rb.com/paranoia-place-online/" target="_blank" class="game-card">
+        <h3>PARANOIA PLACE</h3>
+        <p>Kooperacyjny horror multiplayer, gdzie gracze eksploruj? nawiedzone miejsca, rozwi?zuj?c zagadki i uciekaj?c przed zagro?eniami w atmosferze paranoi i zdrady.</p>
       </a>
-      <a href="https://store.steampowered.com/app/739630/Phasmophobia/" target="_blank" class="game-card">
-        <h3>Phasmophobia</h3>
-        <p>Kooperacyjna gra, w której gracze wcielają się w łowców duchów, badając nawiedzone domy za pomocą narzędzi jak detektory EMF czy kamery. Pełna strachu i współpracy, z realistycznymi duchami reagującymi na głos.</p>
+      <a href="https://store.steampowered.com/app/3127650/NO_STRANGERS/" target="_blank" class="game-card">
+        <h3>NO STRANGERS</h3>
+        <p>Psychologiczny horror z elementami survivalu, gdzie unikasz nieznajomych w mrocznym ?wiecie, pe?nym napi?cia i nieoczekiwanych zwrotow akcji.</p>
       </a>
-      <a href="https://store.steampowered.com/app/1304930/The_Outlast_Trials/" target="_blank" class="game-card">
+      <a href="https://game3rb.com/terrorbytes-online/" target="_blank" class="game-card">
+        <h3>Terrorbytes</h3>
+        <p>Cyberpunkowy horror multiplayer, gdzie walczysz z cyfrowymi potworami w wirtualnej rzeczywisto?ci, ??cz?c strzelanie z elementami survivalu i hackingu.</p>
+      </a>
+      <a href="https://game3rb.com/blood-typers-online/" target="_blank" class="game-card">
+        <h3>Blood Typers</h3>
+        <p>Gra horror z unikalnym mechanizmem krwi, gdzie w kooperacji eksplorujesz laboratoria i walczysz z mutantami, zarz?dzaj?c typami krwi i zasobami.</p>
+      </a>
+      <a href="https://game3rb.com/kletka-online/" target="_blank" class="game-card">
+        <h3>KLETKA</h3>
+        <p>Rosyjski horror survival, gdzie uciekasz z klatki w opuszczonym obiekcie, rozwi?zuj?c zagadki i unikaj?c pu?apek w klaustrofobicznej atmosferze.</p>
+      </a>
+      <a href="https://game3rb.com/dark-hours-online/" target="_blank" class="game-card">
+        <h3>Dark Hours</h3>
+        <p>Multiplayer horror z cyklami dnia i nocy, gdzie w ciemno?ci walczysz z cieniami i demonami, wspo?pracuj?c z przyjacio?mi do przetrwania.</p>
+      </a>
+      <a href="https://game3rb.com/nuclear-nightmare-online/" target="_blank" class="game-card">
+        <h3>Nuclear Nightmare</h3>
+        <p>Post-apokaliptyczny horror survival w strefie radioaktywnej, z mutantami, radiacj? i kooperacj? w poszukiwaniu zasobow i ucieczce.</p>
+      </a>
+      <a href="https://game3rb.com/loch-ness/" target="_blank" class="game-card">
+        <h3>Loch Ness</h3>
+        <p>Horror oparty na legendzie Loch Ness, gdzie eksplorujesz jezioro i okolic?, odkrywaj?c tajemnice potwora w mrocznej, atmosferycznej przygodzie.</p>
+      </a>
+      <a href="https://game3rb.com/subterranauts-online/" target="_blank" class="game-card">
+        <h3>Subterranauts</h3>
+        <p>Podziemny horror kooperacyjny, gdzie jako eksploratorzy walczysz z podziemnymi stworami, rozwi?zuj?c zagadki w klaustrofobicznych jaskiniach.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2928660/BACKROOMS_INVASION/" target="_blank" class="game-card">
+        <h3>BACKROOMS INVASION</h3>
+        <p>Backrooms horror z inwazj? bytow, gdzie uciekasz przez niesko?czone korytarze, unikaj?c anomalii w stylu liminal space.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2515210/SKIBIDI_BACKROOMS/" target="_blank" class="game-card">
+        <h3>SKIBIDI BACKROOMS</h3>
+        <p>Humorystyczny horror w stylu meme Skibidi Toilet, osadzony w backrooms, z ucieczk? i walk? z absurdalnymi stworami.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2689230/FURRY_BACKROOMS/" target="_blank" class="game-card">
+        <h3>FURRY BACKROOMS</h3>
+        <p>Furry-themed horror w backrooms, gdzie eksplorujesz liminal spaces jako antropomorficzne postacie, unikaj?c fursona-potworow.</p>
+      </a>
+      <a href="https://game3rb.com/project-unknown-online/" target="_blank" class="game-card">
+        <h3>Project Unknown</h3>
+        <p>Tajemniczy horror multiplayer, gdzie odkrywasz nieznane projekty naukowe, pe?ne eksperymentow i nadprzyrodzonych zjawisk w kooperacji.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3018630/Nightmare_Pursuit/" target="_blank" class="game-card">
+        <h3>Nightmare Pursuit</h3>
+        <p>Horror po?cigowy, gdzie uciekasz przed koszmarem w mrocznych korytarzach, rozwi?zuj?c zagadki pod presj? czasu.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/1794830/Macabre/" target="_blank" class="game-card">
+        <h3>Macabre</h3>
+        <p>Mroczny horror z elementami psychologicznymi, gdzie eksplorujesz opuszczone miejsca pe?ne makabrycznych tajemnic i wizji.</p>
+      </a>
+      <a href="https://game3rb.com/the-escape-together-online/" target="_blank" class="game-card">
+        <h3>The Escape: Together</h3>
+        <p>Kooperacyjny horror ucieczkowy, gdzie z przyjacio?mi rozwi?zujecie zagadki w nawiedzonych miejscach, unikaj?c duchow i pu?apek.</p>
+      </a>
+      <a href="https://game3rb.com/chased-by-darkness/" target="_blank" class="game-card">
+        <h3>Chased by Darkness</h3>
+        <p>Horror po?cigowy z mrocznymi si?ami, gdzie uciekasz i chowasz si? przed cieniem w opuszczonych budynkach, pe?en jumpscare'ow.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2398680/Niktophobia/" target="_blank" class="game-card">
+        <h3>Niktophobia</h3>
+        <p>Horror z fobi? ciemno?ci, gdzie eksplorujesz w ca?kowitej czerni, u?ywaj?c d?wi?ku i latarki do nawigacji i unikania zagro?e?.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2714970/Backrooms_Media/" target="_blank" class="game-card">
+        <h3>Backrooms Media</h3>
+        <p>Backrooms horror z elementami mediow, gdzie nagrywasz i edytujesz found footage w liminal spaces, uciekaj?c przed bytami.</p>
+      </a>
+      <a href="https://game3rb.com/midnight-heist-online/" target="_blank" class="game-card">
+        <h3>Midnight Heist</h3>
+        <p>Horror heist multiplayer, gdzie w nocy w?amujesz si? do nawiedzonych budynkow, kradn?c artefakty i unikaj?c duchow.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2276810/Paranormal_Investigators/" target="_blank" class="game-card">
+        <h3>Paranormal Investigators</h3>
+        <p>Kooperacyjna gra detektywystyczna z elementami horroru, gdzie badacie nawiedzone miejsca, zbieraj?c dowody na duchy i anomalie.</p>
+      </a>
+      <a href="https://game3rb.com/ghostbusters-spirits-unleashed/" target="_blank" class="game-card">
+        <h3>Ghostbusters Spirits Unleashed Ecto Edition</h3>
+        <p>Asymetryczny multiplayer w uniwersum Pogromcow Duchow, gdzie ?apiesz duchy lub wcielasz si? w nie, z humorem i akcj? w kooperacji.</p>
+      </a>
+      <a href="https://game3rb.com/metaphysical-online/" target="_blank" class="game-card">
+        <h3>MetaPhysical</h3>
+        <p>Horror z elementami metafizycznymi, gdzie eksplorujesz alternatywne rzeczywisto?ci, rozwi?zuj?c zagadki i walcz?c z nadprzyrodzonymi bytami.</p>
+      </a>
+      <a href="https://game3rb.com/boo-men-online/" target="_blank" class="game-card">
+        <h3>Boo Men</h3>
+        <p>Multiplayer horror, gdzie jako duchy straszycie z?odziei lub jako z?odzieje kradniecie z nawiedzonego domu, pe?en ?miechu i strachu.</p>
+      </a>
+      <a href="https://game3rb.com/dark-deception-monsters-and-mortals-online/" target="_blank" class="game-card">
+        <h3>Dark Deception: Monsters & Mortals</h3>
+        <p>Asymetryczny horror multiplayer z postaciami z gier, gdzie uciekasz przez labirynty lub polujesz jako potwory w dynamicznych meczach.</p>
+      </a>
+      <a href="https://game3rb.com/deceit-2-online/" target="_blank" class="game-card">
+        <h3>Deceit 2</h3>
+        <p>Asymetryczny horror z zdrad?, gdzie w grupie graczy identyfikujesz zainfekowanych, ktorzy sabotuj? misje w mrocznej posiad?o?ci.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2309400/The_Devourer_Hunted_Souls/" target="_blank" class="game-card">
+        <h3>The Devourer: Hunted Souls</h3>
+        <p>Horror kooperacyjny, gdzie jako ?owcy duchow walczysz z po?eraczem dusz, zbieraj?c dowody i egzorcyzmuj?c w nawiedzonych lokacjach.</p>
+      </a>
+      <a href="https://game3rb.com/surrounded-online/" target="_blank" class="game-card">
+        <h3>Surrounded</h3>
+        <p>Survival horror, gdzie otoczony przez wrogow walczysz o przetrwanie w kooperacji, buduj?c obron? i eksploruj?c niebezpieczny ?wiat.</p>
+      </a>
+      <a href="https://game3rb.com/ghost-exile/" target="_blank" class="game-card">
+        <h3>Ghost Exile</h3>
+        <p>Kooperacyjny egzorcyzm horror, gdzie banisz duchy z nawiedzonych domow, u?ywaj?c narz?dzi do wykrywania i banicji z?ych duchow.</p>
+      </a>
+      <a href="https://game3rb.com/deadly-broadcast/" target="_blank" class="game-card">
+        <h3>Deadly Broadcast</h3>
+        <p>Horror z livestreamingiem, gdzie transmitujesz nawiedzone miejsca, walcz?c z duchami i zdobywaj?c widzow w kooperacji.</p>
+      </a>
+      <a href="https://game3rb.com/fear-therapy/" target="_blank" class="game-card">
+        <h3>Fear Therapy</h3>
+        <p>Psychologiczny horror multiplayer, gdzie leczysz fobie w terapii, ale granica mi?dzy rzeczywisto?ci? a koszmarem zaciera si?.</p>
+      </a>
+      <a href="https://game3rb.com/so-below-online/" target="_blank" class="game-card">
+        <h3>SO BELOW</h3>
+        <p>Horror eksploracyjny w podziemiach, gdzie odkrywasz tajemnice i walczysz z bytami w mrocznym, proceduralnym ?wiecie.</p>
+      </a>
+      <a href="https://game3rb.com/this-is-a-ghost-ofme/" target="_blank" class="game-card">
+        <h3>This is a Ghost</h3>
+        <p>Multiplayer horror z duchami, gdzie wcielasz si? w duchy lub ?owcow, w asymetrycznej zabawie pe?nej strachu i strategii.</p>
+      </a>
+      <a href="https://game3rb.com/dark-past-online/" target="_blank" class="game-card">
+        <h3>Dark Past</h3>
+        <p>Horror psychologiczny z przesz?o?ci?, gdzie eksplorujesz wspomnienia i walczysz z traumami w kooperacyjnym trybie.</p>
+      </a>
+      <a href="https://game3rb.com/ghost-exorcism-inc/" target="_blank" class="game-card">
+        <h3>Ghost Exorcism Inc</h3>
+        <p>Firma egzorcyzmow multiplayer, gdzie jako zespo? banisz duchy z nawiedzonych miejsc, u?ywaj?c narz?dzi i rytua?ow.</p>
+      </a>
+      <a href="https://game3rb.com/house-of-detention-2/" target="_blank" class="game-card">
+        <h3>House of Detention</h3>
+        <p>Horror ucieczkowy z wi?zienia nawiedzonego, gdzie rozwi?zujesz zagadki i unikasz stra?nikow-duchow w mrocznej atmosferze.</p>
+      </a>
+      <a href="https://game3rb.com/malum/" target="_blank" class="game-card">
+        <h3>Malum</h3>
+        <p>Kooperacyjny horror z rytua?ami, gdzie przywo?ujesz demony i walczysz z nimi w opuszczonych lokacjach, pe?en okultyzmu.</p>
+      </a>
+      <a href="https://game3rb.com/godumas/" target="_blank" class="game-card">
+        <h3>Godumas</h3>
+        <p>Polski horror z elementami folkloru, gdzie eksplorujesz wie? opanowan? przez mroczne si?y, rozwi?zuj?c tajemnice i przetrwaj?c noc.</p>
+      </a>
+      <a href="https://game3rb.com/haunt-chaser/" target="_blank" class="game-card">
+        <h3>Haunt Chaser</h3>
+        <p>?owca duchow multiplayer, gdzie polujesz na nawiedzenia w kooperacji, u?ywaj?c gad?etow do wykrywania i banicji duchow.</p>
+      </a>
+      <a href="https://game3rb.com/curious-cases/" target="_blank" class="game-card">
+        <h3>Curious Cases</h3>
+        <p>Zagadkowy horror z detektywystycznymi sprawami, gdzie rozwi?zujesz tajemnicze przypadki w kooperacji, pe?en twistow i supernaturalnych elementow.</p>
+      </a>
+      <a href="https://game3rb.com/eresys-online/" target="_blank" class="game-card">
+        <h3>Eresys</h3>
+        <p>Grecki mitologiczny horror multiplayer, gdzie walczysz z bogami i potworami w staro?ytnych ruinach, w kooperacyjnym survivalu.</p>
+      </a>
+      <a href="https://game3rb.com/the-outlast-trials-online/" target="_blank" class="game-card">
         <h3>The Outlast Trials</h3>
-        <p>Multiplayerowy survival horror, gdzie gracze uciekają przed eksperymentami w zimnowojennym ośrodku, unikając pułapek i wrogów. Kooperacja jest kluczem do przetrwania w mrocznej atmosferze.</p>
+        <p>Multiplayerowy survival horror, gdzie uciekasz przed eksperymentami w zimnowojennym o?rodku, unikaj?c pu?apek i wrogow. Kooperacja jest kluczem do przetrwania w mrocznej atmosferze.</p>
       </a>
-      <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Resident Evil Village</h3>
-        <p>Klasyczny horror z zombie i mutantami w mrocznej wiosce, pełen zagadek, bossów i strzelania. W trybie multiplayerowym można grać w kooperacji, odkrywając tajemnice Lycanów i wampirów.</p>
+      <a href="https://game3rb.com/demonologist-online/" target="_blank" class="game-card">
+        <h3>Demonologist</h3>
+        <p>Kooperacyjny demoniczny horror, gdzie jako demonolodzy egzorcyzmujecie domy, u?ywaj?c narz?dzi do wykrywania i banicji z?ych duchow.</p>
       </a>
-	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/2400880/Haunted_Investigation/" target="_blank" class="game-card">
+        <h3>Haunted Investigation</h3>
+        <p>Detektywystyczny horror, gdzie badacie nawiedzone miejsca jako ?ledczy, zbieraj?c dowody i rozwi?zuj?c tajemnice duchow.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/3417410/Storebound/" target="_blank" class="game-card">
+        <h3>Storebound</h3>
+        <p>Horror w supermarkecie, gdzie uciekasz przed bytami w liminal space sklepu, z elementami survivalu i zagadek.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/1593010/The_Store_is_Closed/" target="_blank" class="game-card">
+        <h3>The Store is Closed</h3>
+        <p>Survival horror w zamkni?tym sklepie, gdzie budujesz i walczysz z mutantami mebli IKEA w kooperacji, pe?en humoru i strachu.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://game3rb.com/granny-escape-together-online" target="_blank" class="game-card">
+        <h3>Granny: Escape Together</h3>
+        <p>Multiplayer ucieczka z domu babci-morderczyni, gdzie rozwi?zujecie zagadki i unikacie pu?apek w kooperacji.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/2141730/Backrooms_Escape_Together" target="_blank" class="game-card">
+        <h3>Backrooms: Escape Together</h3>
+        <p>Visually lifelike co-op horror for 1-6 people. Journey through procedurally generated levels, using what's available to survive and progress deeper into the backrooms.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://m0dgames.itch.io/granny-multiplayer" target="_blank" class="game-card">
+        <h3>Granny multiplayer mod gmm</h3>
+        <p>Multiplayer mod for Granny, allowing online play with friends in the classic horror house, escaping from Granny together.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://game3rb.com/deathwatchers-online/" target="_blank" class="game-card">
+        <h3>DeathWatchers</h3>
+        <p>Horror z obserwatorami ?mierci, gdzie w kooperacji walczysz z nadprzyrodzonymi si?ami, eksploruj?c mroczne lokacje.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/3237420/Lost_Shadows/?l=polish" target="_blank" class="game-card">
+        <h3>Lost Shadows</h3>
+        <p>Psychologiczny horror z zagubionymi cieniami, gdzie odzyskujesz utracone cz??ci siebie w surrealistycznym ?wiecie zagadek.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/1917850/Haunted_House_Renovator/" target="_blank" class="game-card">
+        <h3>Haunted House Renovator</h3>
+        <p>Renowacja nawiedzonych domow z elementami horroru, gdzie naprawiasz i dekorujesz, walcz?c z duchami i tajemnicami.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://game3rb.com/altarium-online/" target="_blank" class="game-card">
+        <h3>Altarium</h3>
+        <p>Horror RPG z alternatywnymi wymiarami, gdzie podro?ujesz mi?dzy ?wiatami, walcz?c z bytami w kooperacji.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://game3rb.com/download-astrumis-survive-together-v1-00-04-online/" target="_blank" class="game-card">
+        <h3>Astrumis ˇV Survive Together</h3>
+        <p>Kooperacyjny survival w kosmosie, gdzie budujecie baz? na asteroidach, walcz?c z zagro?eniami i zbieraj?c zasoby.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/3617830/Scary_Cargo/" target="_blank" class="game-card">
+        <h3>Scary Cargo</h3>
+        <p>Horror z transportem przera?aj?cych ?adunkow, gdzie unikasz wypadkow i nadprzyrodzonych zdarze? na drodze.</p>
       </a>
-	  	  <a href="https://store.steampowered.com/app/1196590/Resident_Evil_Village/" target="_blank" class="game-card">
-        <h3>Cipka jest mokra</h3>
-        <p>ohhh.</p>
+      <a href="https://store.steampowered.com/app/3864580/PON/" target="_blank" class="game-card">
+        <h3>P.O.N.</h3>
+        <p>Mroczny horror z elementami sci-fi, gdzie eksplorujesz stacj? kosmiczn? opanowan? przez nieznane si?y.</p>
       </a>
-      <a href="https://store.steampowered.com/app/1049410/Little_Nightmares_II/" target="_blank" class="game-card">
-        <h3>Little Nightmares II</h3>
-        <p>Przygodowy horror z zagadkami, gdzie dwoje dzieci ucieka przed groteskowymi stworami w distorted świecie. Kooperacja dodaje warstwy napięcia, z piękną, mroczną grafiką i unikalnymi mechanikami.</p>
+      <a href="https://store.steampowered.com/app/2890060/Midnight_Mayhem/?l=polish" target="_blank" class="game-card">
+        <h3>Midnight Mayhem</h3>
+        <p>Chaotyczny horror nocny, gdzie walczysz z chaosem w mie?cie po zmroku, w kooperacji z przyjacio?mi.</p>
       </a>
-      <a href="https://store.steampowered.com/app/238320/Outlast/" target="_blank" class="game-card">
-        <h3>Outlast</h3>
-        <p>🏕️ Survival horror bez broni, gdzie uciekasz i chowasz się przed szaleńcami w opuszczonym azylu. Wersja multiplayerowa pozwala na wspólną eksplorację, pełną jumpscare'ów i psychologicznego terroru.</p>
+      <a href="https://store.steampowered.com/app/3254020/Exit_Zone" target="_blank" class="game-card">
+        <h3>Exit Zone</h3>
+        <p>Ucieczka z strefy horroru, gdzie rozwi?zujecie zagadki i unikacie zagro?e? w liminalnej strefie wykluczenia.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3587020/Dream_Eatersexe" target="_blank" class="game-card">
+        <h3>Dream Eaters.exe</h3>
+        <p>Horror cyfrowy, gdzie walczysz z po?eraczami snow w wirtualnym ?wiecie, pe?en glitchy i psychologicznego terroru.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3219630/Halloween" target="_blank" class="game-card">
+        <h3>Halloween</h3>
+        <p>Halloweenowy horror z dyniami i duchami, gdzie przetrwasz noc Halloween w nawiedzonym miasteczku.</p>
+      </a>
+      <a href="https://game3rb.com/deathground-online" target="_blank" class="game-card">
+        <h3>Deathground</h3>
+        <p>Survival horror z dinozaurami, gdzie uciekasz i walczysz w kooperacji w prehistorycznym piekle.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3697560/Pizza_Deathlivery" target="_blank" class="game-card">
+        <h3>Pizza Deathlivery</h3>
+        <p>Humorystyczny horror z dostaw? pizzy do nawiedzonych miejsc, gdzie unikasz ?mierci i duchow podczas dostaw.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3815750/SEVERANCE" target="_blank" class="game-card">
+        <h3>SEVERANCE</h3>
+        <p>Horror z odci?ciem, gdzie eksplorujesz izolowane miejsca, walcz?c z separacj? i mrocznymi si?ami.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3967470/We_Gotta_Go" target="_blank" class="game-card">
+        <h3>We Gotta Go</h3>
+        <p>Kooperacyjny horror ucieczkowy, gdzie musicie szybko ewakuowa? si? z zagro?onego miejsca, wspo?pracuj?c pod presj?.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2692990/DONT_SCREAM_TOGETHER" target="_blank" class="game-card">
+        <h3>DON'T SCREAM TOGETHER</h3>
+        <p>Horror, gdzie nie mo?esz krzycze?, a w kooperacji unikacie d?wi?kowych zagro?e?, utrzymuj?c cisz? w mikrofonie.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3607770/Jester_A_Foolish_Ritual" target="_blank" class="game-card">
+        <h3>Jester: A Foolish Ritual</h3>
+        <p>Horror z b?aznem, gdzie uczestniczysz w g?upim rytuale, pe?en humoru czarnego i mrocznych twistow.</p>
+      </a>
+      <a href="https://game3rb.com/mimesis-online" target="_blank" class="game-card">
+        <h3>MIMESIS</h3>
+        <p>Horror z mimik?, gdzie stworzenia na?laduj? ludzi, a ty musisz wykry? impostorow w kooperacji.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3215820/Dreadway" target="_blank" class="game-card">
+        <h3>Dreadway</h3>
+        <p>Mroczna droga horroru, gdzie jedziesz przez nawiedzone autostrady, unikaj?c koszmarow na drodze.</p>
+      </a>
+      <a href="https://game3rb.com/lost-lullabies-the-orphanage-chronicles-online" target="_blank" class="game-card">
+        <h3>Lost Lullabies: The Orphanage Chronicles</h3>
+        <p>Horror w sieroci?cu, gdzie odkrywasz kroniki zagubionych ko?ysanek, pe?en duchow dzieci i zagadek.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2012070/Watch_Your_Back" target="_blank" class="game-card">
+        <h3>Watch Your Back</h3>
+        <p>Horror z obserwacj?, gdzie musisz mie? oczy dooko?a g?owy, unikaj?c atakow z ty?u w mrocznych korytarzach.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/480430/Hide_and_Shriek" target="_blank" class="game-card">
+        <h3>Hide and Shriek</h3>
+        <p>Asymetryczny horror 1v1, gdzie straszysz przeciwnika czarami w szkole, pe?en ukrywania si? i jumpscare'ow.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/1244960/Moonlight_Mansion" target="_blank" class="game-card">
+        <h3>Moonlight Mansion</h3>
+        <p>Horror w posiad?o?ci pod ksi??ycem, gdzie rozwi?zujecie zagadki i walczycie z wilko?akami w nocnej atmosferze.</p>
+      </a>
+      <a href="https://game3rb.com/the-other-side-online/" target="_blank" class="game-card">
+        <h3>The Other Side</h3>
+        <p>Horror z drugiej strony, gdzie przechodzisz między wymiarami, walczyć z alternatywnymi wersjami siebie w kooperacji.</p>
+      </a>
+      <a href="https://game3rb.com/cryo-online/" target="_blank" class="game-card">
+        <h3>Cryo</h3>
+        <p>Kriogeniczny horror survival, gdzie budzisz się z hibernacji w stacji kosmicznej opanowanej przez lod i potwory.</p>
+      </a>
+      <a href="https://game3rb.com/species-unknown-online/" target="_blank" class="game-card">
+        <h3>Species Unknown</h3>
+        <p>Horror z nieznanymi gatunkami, gdzie badacie laboratorium z mutantami, w kooperacyjnym survivalu naukowym.</p>
       </a>
     </div>
   </div>
 
   <div id="strzelanki" class="tab-content">
     <h2>🔫 Shooters</h2>
-    <div class="game-grid">
-      <a href="https://store.steampowered.com/app/730/CounterStrike_2/" target="_blank" class="game-card">
-        <h3>Counter-Strike 2</h3>
-        <p>Klasyczny competitive FPS z drużynowymi meczami terrorystów vs antyterrorystów, gdzie liczy się precyzja, strategia i komunikacja. Idealny na turnieje z przyjaciółmi, z nowymi mapami i ulepszoną grafiką.</p>
-      </a>
-      <a href="https://playvalorant.com/" target="_blank" class="game-card">
-        <h3>Valorant</h3>
-        <p>Hero shooter z unikalnymi agentami i umiejętnościami, łączący taktykę z szybką akcją w meczach 5v5. Świetny na grę zespołową, z rangowanymi trybami i regularnymi aktualizacjami.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/1172470/Apex_Legends/" target="_blank" class="game-card">
-        <h3>Apex Legends</h3>
-        <p>Battle Royale z bohaterami o specjalnych zdolnościach, dynamicznymi mapami i intensywnymi strzelaninami. Kooperacja w drużynach trójkowych jest kluczowa do zwycięstwa w royale.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/1068820/Overwatch_2/" target="_blank" class="game-card">
-        <h3>Overwatch 2</h3>
-        <p>Team-based hero shooter z różnorodnymi bohaterami, rolami i trybami jak push czy capture. Pełen akcji i strategii, idealny na grę z ekipą w szybkich meczach.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/1506830/Battlefield_2042/" target="_blank" class="game-card">
-        <h3>Battlefield 2042</h3>
-        <p>Duże bitwy multiplayer z pojazdami, dynamiczną pogodą i destrukcją otoczenia. Tryby jak Conquest pozwalają na epickie starcia z przyjaciółmi w 128-osobowych meczach.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/359550/Tom_Clancys_Rainbow_Six_Siege/" target="_blank" class="game-card">
-        <h3>Rainbow Six Siege</h3>
-        <p>Taktyczny shooter z destrukcyjnym otoczeniem, operatorami i precyzyjną strzelaniną. Kooperacja i komunikacja są niezbędne w meczach 5v5 z bombami i zakładnikami.</p>
-      </a>
+  <div class="game-grid">
+    <a href="https://store.steampowered.com/app/2507950/Delta_Force_Hawk_Ops/" target="_blank" class="game-card">
+      <h3>Delta Force: Hawk Ops</h3>
+      <p>Taktyczny multiplayer shooter z trybami PvP i PvE – realistyczna broń, operacje specjalne i kooperacja w dynamicznych misjach.</p>
+    </a>
+    <a href="https://game3rb.com/incursion-red-river-online/" target="_blank" class="game-card">
+      <h3>Incursion Red River</h3>
+      <p>Taktyczny extraction shooter w Wietnamie – wykonujecie misje, zbieracie łupy i uciekacie przed wrogami w kooperacji.</p>
+    </a>
+    <a href="https://game3rb.com/ground-branch-v1033-online/" target="_blank" class="game-card">
+      <h3>GROUND BRANCH</h3>
+      <p>Realistyczny taktyczny FPS – customizacja broni, modułowe mapy i kooperacyjne misje z naciskiem na strategię i komunikację.</p>
+    </a>
+    <a href="https://game3rb.com/operator-online/" target="_blank" class="game-card">
+      <h3>OPERATOR</h3>
+      <p>Taktyczny FPS z elementami RPG – wcielacie się w operatorów SWAT, planujecie i wykonujecie misje antyterrorystyczne w kooperacji.</p>
+    </a>
+    <a href="https://game3rb.com/contain-online/" target="_blank" class="game-card">
+      <h3>Contain</h3>
+      <p>Kooperacyjny horror shooter – walczycie z anomaliami i potworami w strefie wykluczenia, łącząc survival z intensywną strzelaniną.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2084450/DIRECT_CONTACT/" target="_blank" class="game-card">
+      <h3>DIRECT CONTACT</h3>
+      <p>FPS z otwartym światem i misjami taktycznymi – elementy RPG, customizacja i kooperacja w konfliktach zbrojnych.</p>
+    </a>
+    <a href="https://game3rb.com/fbc-firebreak-online/" target="_blank" class="game-card">
+      <h3>FBC: Firebreak</h3>
+      <p>Kooperacyjny shooter w uniwersum Control – walczycie z nadprzyrodzonymi zagrożeniami, używając unikalnych mocy i broni w dynamicznych misjach.</p>
+    </a>
+    <a href="https://game3rb.com/swat-commander-online/" target="_blank" class="game-card">
+      <h3>SWAT Commander</h3>
+      <p>Symulator dowódcy SWAT – planujecie operacje, koordynujecie zespół i wykonujecie misje hostage rescue w kooperacji online.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3894440/NO_BACKUP/" target="_blank" class="game-card">
+      <h3>NO BACKUP</h3>
+      <p>Taktyczny roguelike shooter – proceduralne misje bez wsparcia, permadeath i szybkie decyzje w kooperacyjnym stylu.</p>
+    </a>
     </div>
   </div>
-
+  
   <div id="przygodowe" class="tab-content">
     <h2>🌍 Adventure</h2>
-    <div class="game-grid">
-      <a href="https://store.steampowered.com/app/1245620/ELDEN_RING/" target="_blank" class="game-card">
-        <h3>Elden Ring</h3>
-        <p>Otwarty świat soulslike z epickimi bossami, eksploracją i budowaniem buildów. W trybie co-op możesz przywoływać przyjaciół do pomocy w trudnych walkach, odkrywając ogromny świat fantasy.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/292030/The_Witcher_3_Wild_Hunt/" target="_blank" class="game-card">
-        <h3>The Witcher 3</h3>
-        <p>Epicka RPG z bogatą fabułą, wyborami moralnymi i polowaniami na potwory. Chociaż głównie singleplayer, modami można dodać co-op, ale baza gry to immersyjna przygoda w świecie Geralta.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/1184370/God_of_War/" target="_blank" class="game-card">
-        <h3>God of War Ragnarök</h3>
-        <p>Nordycka saga z walkami, zagadkami i emocjonalną historią Kratosa i Atreusa. Singleplayerowa przygoda z elementami RPG, pełna mitologii i spektakularnych bossów.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/" target="_blank" class="game-card">
-        <h3>Red Dead Redemption 2</h3>
-        <p>Dziki Zachód z otwartym światem, polowaniami, rabunkami i historią Arthura Morgana. Wersja online pozwala na multiplayerowe przygody z przyjaciółmi w westernowym stylu.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/1506830/Assassins_Creed_Valhalla/" target="_blank" class="game-card">
-        <h3>Assassin's Creed Valhalla</h3>
-        <p>Wikingowie i eksploracja Anglii, z walkami, budowaniem osady i mitologią. Otwarty świat pełen questów i tajemnic, z opcjami co-op w niektórych trybach.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/1426210/Horizon_Forbidden_West/" target="_blank" class="game-card">
-        <h3>Horizon Forbidden West</h3>
-        <p>Post-apo z robotami, łukami i eksploracją zakazanej zachodu. Singleplayerowa przygoda z piękną grafiką, walkami i historią Aloy w świecie maszyn.</p>
-      </a>
+  <div class="game-grid">
+    <a href="https://game3rb.com/the-greatest-penguin-heist-of-all-time/" target="_blank" class="game-card">
+      <h3>The Greatest Penguin Heist of All Time</h3>
+      <p>Chaotyczny kooperacyjny heist z pingwinami – planujecie napady, unikacie strażników i uciekacie z łupem w absurdalnym stylu multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/heavenly-bodies-online/" target="_blank" class="game-card">
+      <h3>Heavenly Bodies</h3>
+      <p>Kosmiczna fizyka w kooperacji – astronauci poruszają się w zerowej grawitacji, rozwiązując zagadki i eksplorując stacje kosmiczne razem.</p>
+    </a>
+    <a href="https://online-fix.me/games/adventures/17311-filthy-animals-heist-simulator-po-seti.html" target="_blank" class="game-card">
+      <h3>Filthy Animals Heist Simulator</h3>
+      <p>Humorystyczny heist z brudnymi zwierzętami – planujecie rabunki, unikacie pułapek i uciekacie w kooperacyjnym chaosie.</p>
+    </a>
+    <a href="https://online-fix.me/games/puzzles/17553-observe-and-report-po-seti.html" target="_blank" class="game-card">
+      <h3>Observe and Report</h3>
+      <p>Kooperacyjna gra detektywistyczna – obserwujecie podejrzanych, zbieracie dowody i rozwiązujecie zagadki w stylu multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/pulsar-lost-colony/" target="_blank" class="game-card">
+      <h3>PULSAR: Lost Colony</h3>
+      <p>Kosmiczny survival z załogą – dowodzisz statkiem, eksplorujesz galaktykę, walczysz i budujesz w kooperacji do 5 graczy.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2129530/REANIMAL/" target="_blank" class="game-card">
+      <h3>REANIMAL</h3>
+      <p>Mroczna przygodowa gra z elementami horroru – eksplorujecie surrealistyczny świat, rozwiązujecie zagadki i przetrwacie w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2153350/Brothers_A_Tale_of_Two_Sons_Remake/" target="_blank" class="game-card">
+      <h3>Brothers - A Tale of Two Sons Remake</h3>
+      <p>Emocjonalna przygodówka z dwoma braćmi – sterujecie nimi jednocześnie, rozwiązujecie zagadki i odkrywacie historię w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://game3rb.com/feather-party-online/" target="_blank" class="game-card">
+      <h3>Feather Party</h3>
+      <p>Lekka kooperacyjna przygoda z ptakami – latacie razem, eksplorujecie świat i rozwiązujecie zagadki w relaksującym stylu multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2861080/Haunted_Paws/" target="_blank" class="game-card">
+      <h3>Haunted Paws</h3>
+      <p>Przygodówka z kotami w nawiedzonym domu – rozwiązujecie zagadki, unikacie duchów i odkrywacie tajemnice w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/292000/No_More_Room_in_Hell_2/" target="_blank" class="game-card">
+      <h3>No More Room in Hell 2</h3>
+      <p>Hardkorowy survival horror z zombie – kooperacyjne misje, realistyczna walka i przetrwanie w post-apokaliptycznym świecie.</p>
+    </a>
+    <a href="https://online-fix.me/games/horror/16676-resident-evil-revelations-2-po-seti.html" target="_blank" class="game-card">
+      <h3>Resident Evil Revelations 2</h3>
+      <p>Kooperacyjny horror z kampanią dla dwóch osób – eksplorujecie, walczycie z zombie i rozwiązujecie zagadki w survivalowym stylu.</p>
+    </a>
+    <a href="https://game3rb.com/strange-brigade-online/" target="_blank" class="game-card">
+      <h3>Strange Brigade</h3>
+      <p>Przygodowa strzelanka w stylu 1930s – walczycie z mumiami i potworami w kooperacji do 4 graczy, pełna humoru i akcji.</p>
+    </a>
+    <a href="https://game3rb.com/download-sketchys-contract-build-04262024-online/" target="_blank" class="game-card">
+      <h3>Sketchy’s Contract</h3>
+      <p>Kooperacyjny heist z rysunkową grafiką – planujecie napady, unikacie pułapek i uciekacie z łupem w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2522520/Only_Up_With_Friends/" target="_blank" class="game-card">
+      <h3>Only Up: With Friends</h3>
+      <p>Kooperacyjna wspinaczka w absurdalnym świecie – wspinacie się razem, unikacie przeszkód i rywalizujecie w multiplayerze.</p>
+    </a>
+    <a href="https://game3rb.com/generation-zero-online/" target="_blank" class="game-card">
+      <h3>Generation Zero</h3>
+      <p>Post-apo survival w Szwecji lat 80. – walczycie z robotami, budujecie bazy i eksplorujecie w kooperacji do 4 graczy.</p>
+    </a>
+    <a href="https://game3rb.com/zombie-army-trilogy-online/" target="_blank" class="game-card">
+      <h3>Zombie Army Trilogy</h3>
+      <p>Kooperacyjna strzelanka z zombie w alternatywnej II wojnie światowej – walczycie z hordami i bossami w trybie multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/party-animals-online/" target="_blank" class="game-card">
+      <h3>Party Animals</h3>
+      <p>Chaotyczne bijatyki i mini-gry z zwierzakami – fizyka ragdoll, zabawa i rywalizacja w kooperacji i versus multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/shadow-warrior-2-bounty-hunt-dlc-part-2-codex/" target="_blank" class="game-card">
+      <h3>Shadow Warrior 2</h3>
+      <p>Kooperacyjna strzelanka z humorem – walczycie z demonami, lootujecie i eksplorujecie w trybie do 4 graczy.</p>
+    </a>
+    <a href="https://game3rb.com/zombie-army-4-dead-war/" target="_blank" class="game-card">
+      <h3>Zombie Army 4: Dead War</h3>
+      <p>Kooperacyjny horror shooter – walczycie z nazistowskimi zombie w kampanii multiplayer do 4 graczy.</p>
+    </a>
+    <a href="https://game3rb.com/scp-5k/" target="_blank" class="game-card">
+      <h3>SCP: 5K</h3>
+      <p>Taktyczny survival horror w uniwersum SCP – kooperacyjne misje, anomalie i walka z potworami w multiplayerze.</p>
+    </a>
+    <a href="https://game3rb.com/exome-online/" target="_blank" class="game-card">
+      <h3>EXOME</h3>
+      <p>Przygodowy survival z eksploracją i zagadkami – kooperacja, budowanie i odkrywanie tajemnic w otwartym świecie.</p>
+    </a>
+    <a href="https://game3rb.com/escape-memoirs-mansion-heist/" target="_blank" class="game-card">
+      <h3>Escape Memoirs: Mansion Heist</h3>
+      <p>Kooperacyjne escape roomy w rezydencji – rozwiązujecie zagadki, unikacie pułapek i uciekacie razem.</p>
+    </a>
+    <a href="https://game3rb.com/warhammer-40000-darktide/" target="_blank" class="game-card">
+      <h3>Warhammer 40,000: Darktide</h3>
+      <p>Kooperacyjny shooter w mrocznym uniwersum – walczycie z hordami w trybie 4-osobowym z klasami i lootsystemem.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/274940/Depth/?l=polish" target="_blank" class="game-card">
+      <h3>Depth</h3>
+      <p>Asymetryczny multiplayer – nurkowie kontra rekiny, kooperacja i rywalizacja pod wodą w stylu survival horror.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2506820/Demonsomnia/" target="_blank" class="game-card">
+      <h3>Demonsomnia</h3>
+      <p>Kooperacyjny horror – walczycie z demonami w nawiedzonych miejscach, rozwiązujecie zagadki i przetrwacie razem.</p>
+    </a>
+    <a href="https://game3rb.com/crime-simulator-online/" target="_blank" class="game-card">
+      <h3>Crime Simulator</h3>
+      <p>Przygodowy symulator przestępcy – planujecie napady, uciekacie przed policją i budujecie imperium w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3113750/Drunk_Builder_Simulator/" target="_blank" class="game-card">
+      <h3>Drunk Builder Simulator</h3>
+      <p>Humorystyczna kooperacyjna budowa – pijecie i budujecie domy, rozwiązujecie fizyczne zagadki w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3393620/Double_Shoulders/" target="_blank" class="game-card">
+      <h3>Double Shoulders</h3>
+      <p>Przygodowa gra z dwoma postaciami – sterujecie ramionami, rozwiązujecie zagadki i eksplorujecie w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://game3rb.com/phogs/" target="_blank" class="game-card">
+      <h3>PHOGS!</h3>
+      <p>Przygodówka z dwoma psami połączonymi – rozwiązujecie zagadki fizyczne i eksplorujecie razem w kooperacji lokalnej/online.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3161310/Hela/" target="_blank" class="game-card">
+      <h3>Hela</h3>
+      <p>Mroczna przygodówka z nordycką mitologią – eksplorujecie, walczycie i rozwiązujecie zagadki w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3260750/Stage_Fright/" target="_blank" class="game-card">
+      <h3>Stage Fright</h3>
+      <p>Horror przygodowy na scenie teatralnej – rozwiązujecie zagadki i przetrwacie w kooperacji z elementami stealth.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2254990/Permafrost/" target="_blank" class="game-card">
+      <h3>Permafrost</h3>
+      <p>Survival przygodowy w zamarzniętej tundrze – eksplorujecie, craftujecie i przetrwacie w kooperacji z mrozem i bestiami.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1266540/Ships_At_Sea/?l=polish" target="_blank" class="game-card">
+      <h3>Ships At Sea</h3>
+      <p>Morski survival – budujecie łodzie, łowicie ryby i eksplorujecie oceany w kooperacyjnym trybie multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2977620/Squirreled_Away/" target="_blank" class="game-card">
+      <h3>Squirreled Away</h3>
+      <p>Przygodówka z wiewiórkami – zbieracie żołędzie, rozwiązujecie zagadki i eksplorujecie las w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2752710/WHAT_THE_PAK/" target="_blank" class="game-card">
+      <h3>WHAT THE PAK</h3>
+      <p>Chaotyczna kooperacyjna gra z paczkami – dostarczacie przesyłki, unikacie pułapek i rywalizujecie w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1253220/The_Gold_River_Project/" target="_blank" class="game-card">
+      <h3>The Gold River Project</h3>
+      <p>Przygodowy survival w rzece złota – eksplorujecie, craftujecie i przetrwacie w kooperacyjnym świecie.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3253920/Tentacle_Tango/" target="_blank" class="game-card">
+      <h3>Tentacle Tango</h3>
+      <p>Taneczna kooperacyjna gra z mackami – synchronizujecie ruchy i rozwiązujecie zagadki w absurdalnym stylu multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/biped-2-online/" target="_blank" class="game-card">
+      <h3>Biped 2</h3>
+      <p>Kooperacyjna przygodówka z dwoma robotami – rozwiązujecie fizyczne zagadki i eksplorujecie razem w stylu lokalnym/online.</p>
+    </a>
+    <a href="https://game3rb.com/ultimate-zombie-defense-2-online/" target="_blank" class="game-card">
+      <h3>Ultimate Zombie Defense 2</h3>
+      <p>Kooperacyjna obrona przed zombie – budujecie fortyfikacje, craftujecie i walczycie w trybie multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1478500/Big_Walk/" target="_blank" class="game-card">
+      <h3>Big Walk</h3>
+      <p>Przygodówka z wielkimi krokami – eksplorujecie świat, rozwiązujecie zagadki i współpracujecie w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3842740/You_Suck_At_Football/" target="_blank" class="game-card">
+      <h3>You Suck At Football</h3>
+      <p>Humorystyczny kooperacyjny futbol – chaotyczne mecze, fizyka ragdoll i zabawa w multiplayerze.</p>
+    </a>
+    <a href="https://game3rb.com/undercover-fools-online/" target="_blank" class="game-card">
+      <h3>Undercover Fools</h3>
+      <p>Kooperacyjny stealth heist – infiltrujecie, unikacie strażników i uciekacie z łupem w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1397390/The_BreakIn/" target="_blank" class="game-card">
+      <h3>The Break-In</h3>
+      <p>VR heist w kooperacji – włamujecie się, kradniecie i uciekacie w realistycznym stylu multiplayer.</p>
+    </a>
+    <a href="https://store.epicgames.com/pl/p/world-war-z" target="_blank" class="game-card">
+      <h3>World War Z: Aftermath</h3>
+      <p>Kooperacyjny shooter z hordami zombie – walczycie w epickich misjach do 4 graczy w różnych klasach.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2573060/Farmatic/" target="_blank" class="game-card">
+      <h3>Farmatic</h3>
+      <p>Przygodowy farming z elementami automatyzacji – budujecie farmy i eksplorujecie w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://game3rb.com/dying-light-the-beast-online/" target="_blank" class="game-card">
+      <h3>Dying Light The Beast</h3>
+      <p>Kooperacyjny horror parkour – walczycie z bestiami w otwartym świecie zombie w trybie multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/knockem-out-online/" target="_blank" class="game-card">
+      <h3>Knock’Em Out</h3>
+      <p>Chaotyczne kooperacyjne bijatyki – nokautujecie przeciwników w fizyce ragdoll w multiplayerze.</p>
+    </a>
+    <a href="https://game3rb.com/delivery-pals-online/" target="_blank" class="game-card">
+      <h3>Delivery Pals</h3>
+      <p>Kooperacyjna dostawa – dostarczacie paczki, unikacie przeszkód i rywalizujecie w absurdalnym stylu multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/a-gentlemens-dispute-online/" target="_blank" class="game-card">
+      <h3>A Gentlemen’s Dispute</h3>
+      <p>Kooperacyjna gra z gentlemanami – rozwiązujecie spory, walczycie i eksplorujecie w stylu multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1757300/Jump_Space/" target="_blank" class="game-card">
+      <h3>Jump Space</h3>
+      <p>Kosmiczna platformówka w kooperacji – skaczecie między planetami i rozwiązujecie zagadki razem.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3643170/Roadside_Research/" target="_blank" class="game-card">
+      <h3>Roadside Research</h3>
+      <p>Przygodówka z badaniami przydrożnymi – eksplorujecie, zbieracie próbki i rozwiązujecie tajemnice w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3295420/Escape_Memoirs_Bank_Heist/" target="_blank" class="game-card">
+      <h3>Escape Memoirs: Bank Heist</h3>
+      <p>Kooperacyjny escape room w banku – rozwiązujecie zagadki, unikacie pułapek i uciekacie z łupem.</p>
+    </a>
+    <a href="https://game3rb.com/first-class-escape-the-train-of-thought-online/" target="_blank" class="game-card">
+      <h3>First Class Escape: The Train of Thought</h3>
+      <p>Kooperacyjny escape na pociągu – rozwiązujecie zagadki i uciekacie w stylu detektywistycznym multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/first-class-escape-2-head-in-the-clouds" target="_blank" class="game-card">
+      <h3>First Class Escape 2: Head in the Clouds</h3>
+      <p>Kontynuacja escape – zagadki na wysokościach, kooperacja i ucieczka w chmurach.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2509360/Water_Me__You/" target="_blank" class="game-card">
+      <h3>Water Me & You</h3>
+      <p>Kooperacyjna gra z podlewaniem – rozwiązujecie zagadki fizyczne i współpracujecie w ogrodzie multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2413950/Final_Sentence/" target="_blank" class="game-card">
+      <h3>Final Sentence</h3>
+      <p>Mroczna przygodówka z wyrokiem – rozwiązujecie zagadki i przetrwacie w kooperacyjnym horrorze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1969370/LEGO_Party/" target="_blank" class="game-card">
+      <h3>Lego Party</h3>
+      <p>LEGO kooperacyjne mini-gry – rywalizujecie i bawicie się w stylu party multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1538550/LEGO_Voyagers/" target="_blank" class="game-card">
+      <h3>LEGO® Voyagers</h3>
+      <p>Przygodowa eksploracja w LEGO – budujecie i odkrywacie w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2573060/Farmbotic/?l=polish" target="_blank" class="game-card">
+      <h3>Farmbotic</h3>
+      <p>Automatyczny farming z robotami – budujecie farmy i eksplorujecie w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3401960/JOIN_US" target="_blank" class="game-card">
+      <h3>JOIN US</h3>
+      <p>Kooperacyjna gra z zagadkami – łączcie siły i rozwiązujecie tajemnice w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3744430/Together_Moon_Escape" target="_blank" class="game-card">
+      <h3>Together: Moon Escape</h3>
+      <p>Kooperacyjny escape na Księżycu – rozwiązujecie zagadki i uciekacie w kosmosie razem.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3950890/Mole_or_Not" target="_blank" class="game-card">
+      <h3>Mole or Not</h3>
+      <p>Asymetryczna gra z kretami – jeden jest zdrajcą, kooperacja i zdrada w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/587860/Tales_of_Escape/" target="_blank" class="game-card">
+      <h3>Tales of Escape</h3>
+      <p>Kooperacyjne escape roomy – rozwiązujecie zagadki w różnych tematycznych pokojach razem.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1301720/Escape_Room__Der_kranke_Kollege/" target="_blank" class="game-card">
+      <h3>Escape Room - Der kranke Kollege</h3>
+      <p>Niemiecki escape room w biurze – rozwiązujecie zagadki i uciekacie w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/4203890/Pirate_Panic/" target="_blank" class="game-card">
+      <h3>Pirate Panic!</h3>
+      <p>Piracka kooperacyjna zabawa – walczycie z przeciwnikami i uciekacie w stylu multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2681030/Outbound/" target="_blank" class="game-card">
+      <h3>Outbound</h3>
+      <p>Przygodowa gra z eksploracją – budujecie i odkrywacie w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3691910/Free_For_Fall/" target="_blank" class="game-card">
+      <h3>Free For Fall</h3>
+      <p>Kooperacyjne spadanie – unikacie przeszkód i rywalizujecie w absurdalnym multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1836730/Echo_Point_Nova/" target="_blank" class="game-card">
+      <h3>Echo Point Nova</h3>
+      <p>Przygodowa gra z echem – eksplorujecie, skaczecie i rozwiązujecie zagadki w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3864450/Goblin_Company/" target="_blank" class="game-card">
+      <h3>Goblin Company</h3>
+      <p>Kooperacyjna gra z goblinami – planujecie napady i walczycie w stylu multiplayer.</p>
+    </a>
+    <a href="https://online-fix.me/games/arcade/16139-aragami-po-seti.html" target="_blank" class="game-card">
+      <h3>Aragami</h3>
+      <p>Stealth przygodówka z cieniem – infiltrujecie i zabijacie w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://online-fix.me/games/adventures/16737-aragami-2-po-seti.html" target="_blank" class="game-card">
+      <h3>Aragami 2</h3>
+      <p>Kontynuacja stealth – walczycie z cieniami i eksplorujecie w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2787320/Revenge_of_the_Savage_Planet/" target="_blank" class="game-card">
+      <h3>Revenge of the Savage Planet</h3>
+      <p>Kooperacyjna przygoda na dzikiej planecie – eksplorujecie, walczycie i zbieracie w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/973810/Journey_To_The_Savage_Planet/" target="_blank" class="game-card">
+      <h3>Journey To The Savage Planet</h3>
+      <p>Humorystyczna eksploracja planety – skaczecie, zbieracie i odkrywacie w kooperacyjnym stylu.</p>
+    </a>
+    <a href="https://game3rb.com/abyssus-online/" target="_blank" class="game-card">
+      <h3>abyssus</h3>
+      <p>Morski survival horror – eksplorujecie otchłań i walczycie w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3247750/Mycopunk/" target="_blank" class="game-card">
+      <h3>Mycopunk</h3>
+      <p>Przygodówka z grzybami – eksplorujecie, walczycie i rozwiązujecie zagadki w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1926980/King_of_Meat/" target="_blank" class="game-card">
+      <h3>King of Meat</h3>
+      <p>Chaotyczna kooperacyjna rzeźnia – walczycie i przetrwacie w stylu multiplayer.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/592480/Knights_And_Bikes/?l=polish" target="_blank" class="game-card">
+      <h3>Knights And Bikes</h3>
+      <p>Przygodówka z rowerami – eksplorujecie, rozwiązujecie zagadki i współpracujecie w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2122880/All_Hands_on_Deck/" target="_blank" class="game-card">
+      <h3>All Hands on Deck</h3>
+      <p>Kooperacyjna gra na statku – rozwiązujecie zagadki i walczycie w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2543180/POPUCOM/" target="_blank" class="game-card">
+      <h3>POPUCOM</h3>
+      <p>Przygodówka z popcornem – eksplorujecie i rozwiązujecie zagadki w kooperacyjnym stylu.</p>
+    </a>
     </div>
   </div>
-
+  
   <div id="survival" class="tab-content">
     <h2>🏕️ Survival</h2>
-    <div class="game-grid">
-      <a href="https://store.steampowered.com/app/1326470/Sons_Of_The_Forest/" target="_blank" class="game-card">
-        <h3>Sons of the Forest</h3>
-        <p>Horror + budowanie w lesie pełnym kanibali, gdzie zbierasz zasoby, budujesz bazy i walczysz o przetrwanie. Kooperacja z przyjaciółmi ułatwia eksplorację i obronę przed mutantami.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/252490/Rust/" target="_blank" class="game-card">
-        <h3>Rust</h3>
-        <p>Hardkor PvP survival z budowaniem, raidingiem i walką o zasoby na serwerach pełnych graczy. Gra z klanem przyjaciół to klucz do dominacji w bezlitosnym świecie.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/255710/Minecraft/" target="_blank" class="game-card">
-        <h3>Minecraft</h3>
-        <p>Kreatywny survival z budowaniem, eksploracją i walką z mobami. W multiplayerze z przyjaciółmi możesz tworzyć ogromne światy, serwery survivalowe lub minigry.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/221100/DayZ/" target="_blank" class="game-card">
-        <h3>DayZ</h3>
-        <p>Zombie survival PvP z realistycznym głodem, chorobami i interakcjami z graczami. Kooperacja w grupie zwiększa szanse na przetrwanie w post-apokaliptycznym świecie.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/892970/Valheim/" target="_blank" class="game-card">
-        <h3>Valheim</h3>
-        <p>Wikingowski survival z budowaniem longhouse'ów, żeglugą i walkami z bossami. Kooperacja do 10 graczy pozwala na wspólne podboje proceduralnego świata nordyckiego.</p>
-      </a>
-      <a href="https://store.steampowered.com/app/376210/The_Isle/" target="_blank" class="game-card">
-        <h3>The Isle</h3>
-        <p>🏕️ Survival z dinozaurami, gdzie wcielasz się w dino, polujesz i rośniesz. Multiplayer z paczkami przyjaciół jako stado dino dodaje strategii i zabawy.</p>
-      </a>
+  <div class="game-grid">
+    <a href="https://store.steampowered.com/app/1952620/The_Lost_Wild/" target="_blank" class="game-card">
+      <h3>The Lost Wild</h3>
+      <p>Survival horror z dinozaurami w gęstym lesie – unikasz ataków, budujesz schrony i przetrwasz w napiętej atmosferze.</p>
+    </a>
+    <a href="https://game3rb.com/sunkenland-online/" target="_blank" class="game-card">
+      <h3>Sunkenland</h3>
+      <p>Post-apo na wodzie – budujesz tratwy, nurkujesz po zasoby i walczysz z piratami w kooperacji multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/palworld-early-access/" target="_blank" class="game-card">
+      <h3>Palworld</h3>
+      <p>Otwarty świat z potworami Pal – łapiesz je, budujesz bazy, craftujesz i walczysz w kooperacji do 4 graczy.</p>
+    </a>
+    <a href="https://game3rb.com/vein-online" target="_blank" class="game-card">
+      <h3>VEIN</h3>
+      <p>Post-apo zombie survival – budujesz bazy, craftujesz i walczysz w proceduralnym świecie multiplayer.</p>
+    </a>
+    <a href="https://game3rb.com/misery-online" target="_blank" class="game-card">
+      <h3>MISERY</h3>
+      <p>Hardkor w strefie wykluczenia (S.T.A.L.K.E.R.-like) – radiacja, głód i walki w kooperacji.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3078150/Hawthorn/" target="_blank" class="game-card">
+      <h3>Hawthorn™</h3>
+      <p>Fantasy survival z antropomorficznymi zwierzętami – budujesz wioskę i walczysz w lesie w kooperacji.</p>
+    </a>
+    <a href="https://game3rb.com/grounded-2-online/" target="_blank" class="game-card">
+      <h3>Grounded 2</h3>
+      <p>Miniaturowy survival w ogrodzie – budujesz bazy, walczysz z insektami i eksplorujesz w kooperacji do 4 osób.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1572000/Derelicts" target="_blank" class="game-card">
+      <h3>Derelicts</h3>
+      <p>Horror survival na opuszczonych statkach kosmicznych – eksploracja i walka z kosmitami w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3757140/Of_Peaks_and_Tides" target="_blank" class="game-card">
+      <h3>Of Peaks and Tides</h3>
+      <p>Survival w górach i na morzu – żegluga, budowanie i eksploracja w kooperacyjnym otwartym świecie.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/2253100/Everwind" target="_blank" class="game-card">
+      <h3>Everwind</h3>
+      <p>Fantasy survival z magią wiatru – budujesz zamki i walczysz z potworami w proceduralnych światach.</p>
+    </a>
+    <a href="https://game3rb.com/voidtrain" target="_blank" class="game-card">
+      <h3>Voidtrain</h3>
+      <p>Survival w kosmicznym pociągu – budujesz wagony, eksplorujesz pustkę i walczysz w kooperacji do 4 graczy.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/1586260/BLACKFROST_The_Long_Dark_2/" target="_blank" class="game-card">
+      <h3>BLACKFROST The Long Dark 2</h3>
+      <p>Zimowy survival sequel – mróz, wilki i crafting w post-apokaliptycznej Kanadzie z kooperacją.</p>
+    </a>
+    <a href="https://game3rb.com/medieval-dynasty-online/" target="_blank" class="game-card">
+      <h3>Medieval Dynasty</h3>
+      <p>Średniowieczny survival z dynastią – polujesz, budujesz wioskę i żyjesz w kooperacyjnym świecie.</p>
+    </a>
+    <a href="https://game3rb.com/orebound-online/" target="_blank" class="game-card">
+      <h3>Orebound</h3>
+      <p>Survival z wydobyciem rud – budujesz maszyny i walczysz w jaskiniach w multiplayerze.</p>
+    </a>
+    <a href="https://store.steampowered.com/app/3041230/Windrose/" target="_blank" class="game-card">
+      <h3>Windrose</h3>
+      <p>Piracki survival – budujesz statki, eksplorujesz wyspy i walczysz na otwartym oceanie w kooperacji.</p>
+    </a>
     </div>
   </div>
-
+  
   <div id="wyscigowe" class="tab-content">
     <h2>🏎️ Cars</h2>
     <div class="game-grid">
@@ -276,29 +865,109 @@
   <div id="singleplayer" class="tab-content">
     <h2>👥 Singleplayer</h2>
     <div class="game-grid">
-      <a href="https://store.steampowered.com/app/489830/The_Elder_Scrolls_V_Skyrim_Special_Edition/" target="_blank" class="game-card">
-        <h3>Skyrim</h3>
-        <p>Epicka RPG w otwartym świecie z smokami, magią i questami. Pełna modów i eksploracji, idealna na długie sesje solo z bogatą fabułą i wyborami.</p>
+      <a href="https://store.steampowered.com/app/1281640/Medic_Pacific_War/" target="_blank" class="game-card">
+        <h3>Medic: Pacific War</h3>
+        <p>Polski symulator medyka podczas II wojny światowej na Pacyfiku, gdzie ratujesz rannych żołnierzy w realistycznych bitwach i misjach ewakuacyjnych.</p>
       </a>
-      <a href="https://store.steampowered.com/app/1091500/Cyberpunk_2077/" target="_blank" class="game-card">
-        <h3>Cyberpunk 2077</h3>
-        <p>Futurystyczna przygoda w Night City z cyberwszczepami, strzelaninami i wyborami wpływającymi na historię. Immersyjny świat z DLC Phantom Liberty.</p>
+      <a href="https://store.steampowered.com/app/2255370/Directive_8020/" target="_blank" class="game-card">
+        <h3>Directive 8020</h3>
+        <p>Szósta część serii horrorów The Dark Pictures Anthology, premierowy odcinek drugiego sezonu ˇV gra przygodowa z elementami survivalu w kosmosie, pełna wyborów i napięcia.</p>
       </a>
-      <a href="https://store.steampowered.com/app/271590/Grand_Theft_Auto_V/" target="_blank" class="game-card">
-        <h3>GTA V</h3>
-        <p>Akcja w Los Santos z trzema bohaterami, misjami i otwartym światem. Chociaż ma tryb online, kampania singleplayer to mistrzostwo heistów i satyry.</p>
+      <a href="https://store.steampowered.com/app/2605900/DIGESTED/" target="_blank" class="game-card">
+        <h3>DIGESTED</h3>
+        <p>Krotki, intensywny survival horror z wysoką regrywalnością, gdzie uciekasz przed zagrożeniem w stylu "Blair Witch Project", pełen napięcia i losowych wydarzeń.</p>
       </a>
-      <a href="https://store.steampowered.com/app/1174180/Red_Dead_Redemption_2/" target="_blank" class="game-card">
-        <h3>Red Dead Redemption 2</h3>
-        <p>Dziki Zachód z historią Arthura, polowaniami i rabunkami. Detaliczny świat z realistyczną fizyką i emocjonalną fabułą w trybie singleplayer.</p>
+      <a href="https://store.steampowered.com/app/849100/Alaskan_Road_Truckers/" target="_blank" class="game-card">
+        <h3>Alaskan Road Trucker</h3>
+        <p>Symulator kierowcy ciężarowki z grą survivalową na Alasce, gdzie walczysz z pogodą, naprawiasz pojazdy i dostarczasz towary w ekstremalnych warunkach.</p>
       </a>
-      <a href="https://store.steampowered.com/app/1245620/ELDEN_RING/" target="_blank" class="game-card">
-        <h3>Elden Ring</h3>
-        <p>Soulslike w otwartym świecie z bossami, magią i eksploracją. Wyzwanie dla solo graczy, z głębokim lore i mnóstwem sekretów do odkrycia.</p>
+      <a href="https://store.steampowered.com/app/1153410/JDM_Japanese_Drift_Master/" target="_blank" class="game-card">
+        <h3>JDM: Japanese Drift Master</h3>
+        <p>Polska gra wyścigowa poświęcona driftowi w japońskiej otoczce, z otwartym światem, kampanią fabularną i realistyczną fizyką pokonywania zakrętow w poślizgu.</p>
       </a>
-      <a href="https://store.steampowered.com/app/1888930/The_Last_of_Us_Part_I/" target="_blank" class="game-card">
-        <h3>The Last of Us Part I</h3>
-        <p>Post-apo survival story z Joel'em i Ellie, walkami i emocjami. Remake z ulepszoną grafiką, skupiony na narracji i relacjach w zrujnowanym świecie.</p>
+      <a href="https://store.steampowered.com/app/606160/ROUTINE/" target="_blank" class="game-card">
+        <h3>ROUTINE</h3>
+        <p>Horror sci-fi na stacji kosmicznej, gdzie eksplorujesz opuszczone korytarze, unikając zagrozenia i rozwiązując zagadki w stylu retro.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2381520/Unrecord/" target="_blank" class="game-card">
+        <h3>Unrecord</h3>
+        <p>Realistyczny FPS z perspektywy bodycam, gdzie wcielasz się w policjanta w intensywnych operacjach, z zaawansowaną grafiką symulując nagranie z kamery.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/1757350/ILL/" target="_blank" class="game-card">
+        <h3>ILL</h3>
+        <p>Gra akcji FPP w konwencji survival horroru, gdzie przemierzasz ponury fort opanowany przez potwory i toczysz brutalne starcia z elementami skradanki.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2193600/Paranormal_Tales/" target="_blank" class="game-card">
+        <h3>Paranormal Tales</h3>
+        <p>Pierwszoosobowy horror na Unreal Engine 5, w ktorym odkrywasz historie osob zaginionych po konfrontacji z siłami nadprzyrodzonymi, pełen napięcia i found footage stylu.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/233290/Murdered_Soul_Suspect/" target="_blank" class="game-card">
+        <h3>Murdered: Soul Suspect</h3>
+        <p>Przygodowa gra akcji TPP z duchem zamordowanego detektywa, ktory rozwiązuje zagadki własnej śmierci w Salem, prowadząc śledztwo z elementami nadprzyrodzonymi.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2416450/MOUSE_PI_For_Hire/" target="_blank" class="game-card">
+        <h3>MOUSE: P.I. For Hire</h3>
+        <p>Polska gra w stylu retro noir, gdzie wcielasz się w mysz-detektywa w świecie inspirowanym klasycznymi kreskowkami, z akcją, strzelaninami i humorem.</p>
+      </a>
+      <a href="https://dodi-repacks.site/uncharted-legacy-of-thieves-collection/" target="_blank" class="game-card">
+        <h3>UNCHARTED: Legacy of Thieves Collection</h3>
+        <p>Kompilacja odświeżonych gier Uncharted 4 i Zaginione Dziedzictwo, z przygodami Nathana Drake'a, eksploracją, walkami i zagadkami w stylu filmowym.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2208810/Jurassic_Park_Survival/" target="_blank" class="game-card">
+        <h3>Jurassic Park: Survival</h3>
+        <p>Przygodowa gra akcji z elementami skradanki, oparta na licencji Parku Jurajskiego, gdzie walczysz o przetrwanie na Isla Nublar opanowanej przez dinozaury.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3166050/Quite_a_Ride/" target="_blank" class="game-card">
+        <h3>Quite a Ride</h3>
+        <p>Horror, w ktorym jeździsz rowerem w nieustannie zmieniającym się świecie, zarządzając baterią telefonu i odszyfrowując wiadomości, aby przetrwać.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/1977610/Long_Gone/" target="_blank" class="game-card">
+        <h3>Long Gone</h3>
+        <p>Hybryda turowego RPG, gry visual novel i strzelanki, osadzona w post-apokaliptycznym świecie z elementami survivalu i decyzji fabularnych.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3764200/Resident_Evil_Requiem/" target="_blank" class="game-card">
+        <h3>Resident Evil Requiem</h3>
+        <p>Nowa odsłona serii Resident Evil, skupiona na horrorze i przetrwaniu w świecie zombie, z ulepszoną grafiką i mechanikami walki.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3566840/Bleak_Haven/" target="_blank" class="game-card">
+        <h3>Bleak Haven</h3>
+        <p>Horror inspirowany Resident Evil, z eksploracją mrocznego świata, zagadkami i walkami z potworami w opuszczonym azylu.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2141130/Road_Kings/?l=polish" target="_blank" class="game-card">
+        <h3>Road Kings</h3>
+        <p>Symulator kierowcy ciężarowki, gdzie prowadzisz 40-tonowy pojazd po południowych USA, zarządzając zleceniami, przyczepami i unikając katastrof.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2101960/Cronos_The_New_Dawn" target="_blank" class="game-card">
+        <h3>Cronos</h3>
+        <p>Polski horror osadzony w PRL-u, z survivalowymi elementami i atmosfery betonowego reżimu, gdzie eksplorujesz upiorne bloki i walczysz o przetrwanie.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3875690/Mirek_Handlarz_Symulator" target="_blank" class="game-card">
+        <h3>Mirek Handlarz Symulator</h3>
+        <p>Polski symulator sprzedawcy aut w stylu meme, gdzie handlujesz samochodami, negocjujesz ceny i zarządzasz komisem w humorystycznym, polskim klimacie.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3917090/Assetto_Corsa_Rally" target="_blank" class="game-card">
+        <h3>Assetto Corsa Rally</h3>
+        <p>Wysoce wierny symulator rajdowy z laserowo skanowanymi trasami i samochodami, skupiony na precyzji, fizyce i wyzwaniach off-road.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/1808500/ARC_Raiders/" target="_blank" class="game-card">
+        <h3>ARC Raiders</h3>
+        <p>Strzelanka ekstrakcyjna TPP, gdzie wspołpracujesz z graczami przeciw morderczym robotom w otwartym świecie, gromadząc zasoby i realizując zadania.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/2501620/Kandyland" target="_blank" class="game-card">
+        <h3>Kandyland</h3>
+        <p>Horror psychologiczny w stylu candy-themed, z eksploracją mrocznego parku rozrywki, zagadkami i ucieczką przed zagrożeniami w słodko-gorzkim świecie.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/1313230/Beautiful_Light/" target="_blank" class="game-card">
+        <h3>Beautiful Light</h3>
+        <p>Taktyczna pierwszoosobowa strzelanka ekstrakcyjna PvPvPvE, gdzie 6 oddzia?ow po 3 agentow musi wejść, znaleść i wynieść artefakt z niebezpiecznego obszaru.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/1327040/Truck_World_Australia/" target="_blank" class="game-card">
+        <h3>Truck World: Australia</h3>
+        <p>Symulator cieżarowek w Australii, gdzie prowadzisz pojazdy po outbacku, zarządzając ładunkami, pogodą i naprawami w realistycznym środowisku.</p>
+      </a>
+      <a href="https://store.steampowered.com/app/3273260/Lost_Host/" target="_blank" class="game-card">
+        <h3>Lost Host</h3>
+        <p>Przygodowa gra z elementami horroru, gdzie wcielasz się w zagubioną zabawkę szukając właściciela w tajemniczym świecie pełnym zagadek i niebezpieczeństw.</p>
       </a>
     </div>
   </div>

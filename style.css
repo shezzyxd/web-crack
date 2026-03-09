@@ -62,11 +62,12 @@ h1 {
   -webkit-text-fill-color: transparent;
   margin-bottom: 8px;
   cursor: pointer;
-  transition: text-shadow 0.3s ease;
-  user-select: none;           /* zapobiega zaznaczaniu tekstu */
+  transition: transform 0.3s ease, text-shadow 0.3s ease;
+  user-select: none;           
 }
 
 h1:hover {
+  transform: scale(1.05);
   text-shadow: 0 0 15px #00f0ff;
 }
 
@@ -99,7 +100,6 @@ h1:hover {
 /* Unikalne kolory dla zakładek */
 .tab-menu { color: var(--color-menu); border-color: rgba(248, 153, 255, 0.3); }
 .tab-menu:hover, .tab-menu.active { border-color: var(--color-menu); box-shadow: 0 8px 20px rgba(248, 153, 255, 0.3); }
-
 
 .tab-horrory { color: var(--color-horrory); border-color: rgba(255, 23, 68, 0.3); }
 .tab-horrory:hover, .tab-horrory.active { border-color: var(--color-horrory); box-shadow: 0 8px 20px rgba(255, 23, 68, 0.3); }
@@ -306,6 +306,34 @@ body.loading {
   overflow: hidden;
 }
 
+/* pulsująca nazwa */
+.loader-logo.pulse {
+  animation: pulse-glow 3.2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    text-shadow: 0 0 20px #f899ff, 0 0 40px #ff6ec7;
+    opacity: 0.92;
+  }
+  50% {
+    transform: scale(1.06);
+    text-shadow: 0 0 35px #f899ff, 0 0 70px #ff6ec7;
+    opacity: 1;
+  }
+}
+
+/* mały opis */
+.loader-hint {
+  margin-top: 24px;
+  color: #f899ff;
+  opacity: 0.65;
+  font-size: 1.05rem;
+  letter-spacing: 1px;
+  font-weight: 300;
+}
+
 /* ================= PRO SEARCH – PRAWY GÓRNY RÓG ================= */
 
 .search-container {
@@ -389,22 +417,6 @@ body.loading {
   display: none;
 }
 
-h1 {
-  font-size: 2.8rem;
-  background: linear-gradient(90deg, #00f0ff, #ff2eff, #ff6e00);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
-  cursor: pointer;
-  transition: transform 0.3s ease, text-shadow 0.3s ease;
-  user-select: none;           /* zapobiega zaznaczaniu tekstu */
-}
-
-h1:hover {
-  transform: scale(1.05);
-  text-shadow: 0 0 15px #00f0ff;
-}
-
 /* Pulsujące podświetlenie po wyszukaniu */
 @keyframes pulse-pink {
   0% {
@@ -427,4 +439,120 @@ h1:hover {
   background: rgba(248, 153, 255, 0.12) !important;
   z-index: 10;
   transition: all 0.4s ease;
+}
+
+/* ────────────────────────────────────────────────
+   Flappy Bird – poprawki wyglądu i responsywności
+───────────────────────────────────────────────── */
+
+#flappyCanvas {
+  background: linear-gradient(to bottom, #1e0033, #4a148c, #7b1fa2);
+  image-rendering: pixelated;           
+  touch-action: none;                   
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#gameMessage {
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#gameMessage button {
+  background: linear-gradient(135deg, #f899ff, #ff6ec7);
+  color: #000;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 999px;
+  font-size: 17px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(248, 153, 255, 0.5);
+  transition: all 0.2s;
+}
+
+#gameMessage button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(248, 153, 255, 0.7);
+}
+
+/* responsywność canvasa */
+@media (max-width: 500px) {
+  #flappyCanvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2 / 3;          
+  }
+
+  .game-card {
+    padding: 16px;
+  }
+
+  #gameMessage {
+    font-size: 15px;
+  }
+}
+
+/* zapobiega zaznaczaniu tekstu podczas gry */
+#menu, #flappyCanvas, #gameMessage {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+/* ────────────────────────────────────────────────
+   Aim Trainer – Złap Ryntę: Nowe style dla efektów wizualnych
+───────────────────────────────────────────────── */
+
+/* Hover dla przycisków Aim Trainer */
+#startAimBtn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(248, 153, 255, 0.7);
+}
+
+/* Animacja dla end screen button */
+#aimEndScreen button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(248, 153, 255, 0.7);
+}
+
+/* Responsywność dla Aim Trainer */
+@media (max-width: 500px) {
+  #aimGameArea {
+    height: 300px;
+  }
+  #aimCanvas {
+    width: 100%;
+    height: auto;
+  }
+  #aimUI {
+    font-size: 14px;
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+/* Glow dla wyników w end screen */
+#aimResults strong {
+  text-shadow: 0 0 10px #f899ff;
+}
+
+.aim-trainer-card .game-card-content,          /* jeśli masz taki wrapper */
+#startAimBtn, 
+#aimEndScreen button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#startAimBtn,
+#aimEndScreen button {
+    margin: 16px 0 !important;     /* zerujemy boczne marginesy */
+    padding: 14px 48px;            /* szerszy = trudniej zauważyć lekkie przesunięcie */
+    min-width: 260px;              /* opcjonalnie – ładniej wygląda wyśrodkowany */
 }
